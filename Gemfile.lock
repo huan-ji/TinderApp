@@ -62,6 +62,7 @@ GEM
       xpath (~> 2.0)
     childprocess (0.6.2)
       ffi (~> 1.0, >= 1.0.11)
+    coderay (1.1.1)
     coffee-rails (4.2.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.2.x)
@@ -71,6 +72,8 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
     debug_inspector (0.0.2)
+    domain_name (0.5.20170223)
+      unf (>= 0.0.5, < 1.0.0)
     erubi (1.6.0)
     execjs (2.7.0)
     faraday (0.11.0)
@@ -80,6 +83,8 @@ GEM
     ffi (1.9.18)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
+    http-cookie (1.0.3)
+      domain_name (~> 0.5)
     i18n (0.8.1)
     jbuilder (2.6.3)
       activesupport (>= 3.0.0, < 5.2)
@@ -101,9 +106,16 @@ GEM
     minitest (5.10.1)
     multi_json (1.12.1)
     multipart-post (2.0.0)
+    netrc (0.11.0)
     nio4r (2.0.0)
     nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
+    pry (0.10.4)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    pry-rails (0.3.5)
+      pry (>= 0.9.10)
     public_suffix (2.0.5)
     puma (3.8.2)
     rack (2.0.1)
@@ -136,6 +148,10 @@ GEM
     rb-fsevent (0.9.8)
     rb-inotify (0.9.8)
       ffi (>= 0.5.0)
+    rest-client (2.0.1)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     ruby_dep (1.5.0)
     rubyzip (1.2.1)
     sass (3.4.23)
@@ -143,6 +159,7 @@ GEM
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
       websocket (~> 1.0)
+    slop (3.6.0)
     spring (2.0.1)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -171,6 +188,9 @@ GEM
       thread_safe (~> 0.1)
     uglifier (3.1.9)
       execjs (>= 0.3.0, < 3)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.2)
     watir-webdriver (0.9.9)
       selenium-webdriver (>= 2.46.2)
     web-console (3.4.0)
@@ -190,12 +210,14 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  capybara (~> 2.7.0)
+  capybara
   coffee-rails (~> 4.2)
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
+  pry-rails
   puma (~> 3.7)
   rails (~> 5.1.0.beta1)
+  rest-client
   sass-rails!
   selenium-webdriver
   spring

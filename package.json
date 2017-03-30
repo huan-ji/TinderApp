@@ -1,5 +1,7 @@
 {
   "name": "TinderApp",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "tinderauth": "^2.0.3"
+  }
 }
