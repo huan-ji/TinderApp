@@ -11,5 +11,13 @@ module TinderApp
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+    # Capybara.register_driver :selenium do |app|
+    #   Capybara::Selenium::Driver.new(
+    #     app,
+    #     browser: :firefox,
+    #     desired_capabilities: Selenium::WebDriver::Remote::Capabilities.firefox(marionette: false)
+    #   )
+    # end
   end
 end

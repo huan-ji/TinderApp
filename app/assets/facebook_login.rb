@@ -3,21 +3,20 @@ require 'capybara'
 require 'capybara/dsl'
 
 Capybara.run_server = false
-Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app, headers: { 'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; U; en-gb; KFTHWI Build/JDQ39) AppleWebKit/535.19 (KHTML, like Gecko) Silk/3.16 Safari/535.19' })
-end
 Capybara.current_driver = :selenium
-Capybara.app_host = 'https://www.gotinder.com'
+Capybara.default_max_wait_time = 30
 
 module FacebookLogin
   class Auth
     include Capybara::DSL
+
     FACEBOOK_AUTHENTICATION_TOKEN_URL =
-    "https://www.facebook.com/v2.0/dialog/oauth?" \
-    "client_id=464891386855067&" \
-    "redirect_uri=fb464891386855067://authorize/&" \
-    "&scope=user_birthday,user_photos,user_education_history,email,user_relationship_details,user_friends,user_work_history,user_likes&" \
-    "response_type=token"
+      "https://www.facebook.com/dialog/oauth?" \
+      "client_id=464891386855067&" \
+      "redirect_uri=fb464891386855067://authorize/&" \
+      "&scope=user_birthday,user_photos,user_education_history,email,user_relationship_details," \
+      "user_friends,user_work_history,user_likes&" \
+      "response_type=token"
 
     def get_credentials(facebook_email, facebook_password)
       visit FACEBOOK_AUTHENTICATION_TOKEN_URL
@@ -26,10 +25,10 @@ module FacebookLogin
       click_button('Log In')
 
       fb_dtsg = find('input[name=fb_dtsg]', visible: false).value
-      
-      cookie = page.driver.browser.manage.all_cookies.map { |cookie| "#{cookie[:name]}=#{cookie[:value]};"}.join(' ')
+
+      cookies = page.driver.browser.manage.all_cookies.map { |cookie| "#{cookie[:name]}=#{cookie[:value]};" }.join(' ')
       token_response = RestClient.post(
-        'https://www.facebook.com/v2.3/dialog/oauth/confirm',
+        'https://www.facebook.com/dialog/oauth/confirm',
         {
           app_id: '464891386855067',
           fb_dtsg: fb_dtsg,
@@ -42,18 +41,23 @@ module FacebookLogin
           sheet_name: 'initial',
           __CONFIRM__: 1,
           sso_device: '',
-          ref: 'Default',
+          ref: 'Default'
         },
-        headers = {
-          cookie: cookie
+        {
+          cookie: cookies
         }
       )
 
-      facebook_authentication_token = token_response.body.match(/access_token=([\w_]+)&/)[1]
-      id_response = RestClient.get("https://graph.facebook.com/me?access_token=#{facebook_authentication_token}")
-      facebook_user_id = JSON.parse(id_response.body)["id"]
+      fb_auth_token = token_response.body.match(/access_token=([\w_]+)&/)[1]
+      id_response = RestClient.get("https://graph.facebook.com/me?access_token=#{fb_auth_token}")
+      fb_user_id = JSON.parse(id_response.body)["id"]
+      page.driver.quit
 
-      return facebook_authentication_token, facebook_user_id
+      return {
+        fb_auth_token: fb_auth_token,
+        fb_user_id: fb_user_id,
+        success: true
+      }
     end
   end
 end
